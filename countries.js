@@ -10,4 +10,5 @@ export default async function getCountryData() {
     } catch (error) {
         console.error('Error loading countries', error);
     }
+    
 }

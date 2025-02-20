@@ -16,6 +16,7 @@ export default class randomCountries {
             cont.splice(randomIndex, 1);
         }
     }
+    
 
     nextCountry() {
         if (this.current === this.countries.length) {

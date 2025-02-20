@@ -18,6 +18,7 @@ const amount = window.inputData.amount || 5;
 let currentCountry = null;
 let points = 0;
 
+
 const vectorLayer = new VectorLayer({
   background: '#1a2b39',
   source: new VectorSource({
