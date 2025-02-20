@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+<button type="button" id="start">Start new game</button>
+<input type="text" value="5" maxlength="249" minlength="1" id="range">
+<label for="range">Amount of countries</label>\
+<script type="module">
+    let amountInput = 5;
+    document.querySelector('#start').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.inputData = { 'amount': amountInput };
+        console.log(window.inputData);
+        amountInput = document.querySelector('#range').value;
+        setTimeout(() => window.open(`./game.html?data=${amountInput}`), 1000);
+    })
+</script>
+</body>
+</html>
