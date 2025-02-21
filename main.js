@@ -13,8 +13,8 @@ import OSM from 'ol/source/OSM.js';
 import getCountryData from './countries.js';
 import randomCountries from './randomCountry.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
-
-const amount = window.inputData.amount || 5;
+const urlParams = new URLSearchParams(window.location.search);
+let amount = urlParams.get('amount') || 5;
 let currentCountry = null;
 let points = 0;
 

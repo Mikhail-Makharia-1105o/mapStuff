@@ -11,10 +11,8 @@
     let amountInput = 5;
     document.querySelector('#start').addEventListener('click', (e) => {
         e.preventDefault();
-        window.inputData = { 'amount': amountInput };
-        console.log(window.inputData);
         amountInput = document.querySelector('#range').value;
-        setTimeout(() => window.open(`./game.html?data=${amountInput}`), 1000);
+        setTimeout(() => window.location.href = `./game.html?amount=${amountInput}`, 1000);
     })
 </script>
 </body>
