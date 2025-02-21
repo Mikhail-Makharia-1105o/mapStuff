@@ -11,7 +11,7 @@ import Style from 'ol/style/Style.js';
 import Fill from 'ol/style/Fill.js'
 
 const urlParams = new URLSearchParams(window.location.search);
-let amount = urlParams.get('amount') || 5;
+let amount = urlParams.get('amount') && urlParams.get('amount') > 0 ? urlParams.get('amount') : 5;
 let amountOfGuesses = 200; // 200 guesses per game
 let currentCountry = null;
 let points = 0;
