@@ -1,20 +1,16 @@
-import Feature from 'ol/Feature.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import Point from 'ol/geom/Point.js';
-import Modify from 'ol/interaction/Modify.js';
 import TileLayer from 'ol/layer/Tile.js';
 import VectorLayer from 'ol/layer/Vector.js';
-import OGCMapTile from 'ol/source/OGCMapTile.js';
 import VectorSource from 'ol/source/Vector.js';
-import Icon from 'ol/style/Icon.js';
-import Style from 'ol/style/Style.js';
 import OSM from 'ol/source/OSM.js';
 import getCountryData from './countries.js';
 import randomCountries from './randomCountry.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
+
 const urlParams = new URLSearchParams(window.location.search);
 let amount = urlParams.get('amount') || 5;
+let amountOfGuesses = 200; // 200 guesses per game
 let currentCountry = null;
 let points = 0;
 
@@ -46,7 +42,7 @@ const map = new Map({
 
 const countries = await getCountryData();
 const randomCountryAmount = new randomCountries()
-randomCountryAmount.generateRandomCountryAmount(countries, amount);
+randomCountryAmount.generateRandomCountryAmount(countries, amountOfGuesses);
 document.querySelector('.amount').textContent = amount;
 document.querySelector('.random-country-name').innerText = randomCountryAmount.getCurrentRandomCountry();
 
@@ -93,12 +89,22 @@ map.on('click', function (evt) {
   displayFeatureInfo(evt.pixel);
   if (currentCountry) {
     document.getElementById('info').textContent = currentCountry;
+    console.log(amount)
     if (compare(currentCountry, randomCountryAmount.getCurrentRandomCountry())) {
       points++;
       document.querySelector('.points').textContent = points;
+      if(points === amountOfGuesses) {
+        alert('Congratulations! You won!');
+        window.location.href = './index.html'
+      }
       randomCountryAmount.nextCountry();
-      amount =- 1;
       document.querySelector('.random-country-name').innerText = randomCountryAmount.getCurrentRandomCountry();
+    } else {
+      amount -= 1;
+      if (amount === 0) {
+        alert('You lost!');
+        window.location.href = './index.html'
+      }
       document.querySelector('.amount').textContent = amount;
     }
   }

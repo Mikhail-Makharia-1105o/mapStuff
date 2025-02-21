@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+<link rel="stylesheet" href="start_style.css" type="text/css"/>
+<title>Map Game</title>
 </head>
 <body>
+<h1>Map Game</h1>
+<p>Test your map knowledge in this interactive highly configurable game or smth</p>
 <button type="button" id="start">Start new game</button>
+<label for="range">Amount of lives</label>
 <input type="text" value="5" maxlength="249" minlength="1" id="range">
-<label for="range">Amount of countries</label>\
 <script type="module">
     let amountInput = 5;
     document.querySelector('#start').addEventListener('click', (e) => {
