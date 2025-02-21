@@ -7,6 +7,8 @@ import OSM from 'ol/source/OSM.js';
 import getCountryData from './countries.js';
 import randomCountries from './randomCountry.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
+import Style from 'ol/style/Style.js';
+import Fill from 'ol/style/Fill.js'
 
 const urlParams = new URLSearchParams(window.location.search);
 let amount = urlParams.get('amount') || 5;
@@ -14,6 +16,11 @@ let amountOfGuesses = 200; // 200 guesses per game
 let currentCountry = null;
 let points = 0;
 
+const countryColors = ['#FFC312', '#C4E538', '#12CBC4', '#ED4C67', '#EE5A24']
+
+function getRandomColor() {
+  return countryColors[Math.floor(Math.random() * countryColors.length)];
+}
 
 const vectorLayer = new VectorLayer({
   background: '#1a2b39',
@@ -21,10 +28,20 @@ const vectorLayer = new VectorLayer({
     url: 'https://openlayers.org/en/v4.6.5/examples/data/geojson/countries.geojson',
     format: new GeoJSON(),
   }),
-  style: {
-    'fill-color': ['string', ['get', 'COLOR_NNH'], '#eee'],
-  },
+  style: function(feature) {
+    return new Style({
+      fill: new Fill({
+        color: feature.get('color')
+      })
+    });
+  }
 })
+
+vectorLayer.getSource().on('addfeature', function(event) {
+  var feature = event.feature;
+  var color = getRandomColor();
+  feature.set('color', color);
+});
 
 const map = new Map({
   layers: [
