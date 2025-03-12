@@ -1,4 +1,4 @@
-export default class randomCountries {
+export default class RandomCountries {
     constructor() {
         this.countries = [];
         this.current = 0;
@@ -9,9 +9,8 @@ export default class randomCountries {
         if (amount > cont.length || amount <= 0) {
             throw new Error("Invalid amount");
         }
-        for (var i = 0; i < amount; i++) {
-            var randomIndex = Math.floor(Math.random() * cont.length);
-            var randomCountry = cont[randomIndex];
+        for (let i = 0; i < amount; i++) {
+            const randomCountry = cont[Math.floor(Math.random() * cont.length)];
             this.countries.push(randomCountry.name.common);
             cont.splice(randomIndex, 1);
         }

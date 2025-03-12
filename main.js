@@ -5,14 +5,14 @@ import VectorLayer from 'ol/layer/Vector.js';
 import VectorSource from 'ol/source/Vector.js';
 import OSM from 'ol/source/OSM.js';
 import getCountryData from './countries.js';
-import randomCountries from './randomCountry.js';
+import RandomCountries from './randomCountry.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import Style from 'ol/style/Style.js';
 import Fill from 'ol/style/Fill.js'
 
 const urlParams = new URLSearchParams(window.location.search);
 let amount = urlParams.get('amount') && urlParams.get('amount') > 0 ? urlParams.get('amount') : 5;
-let amountOfGuesses = 200; // 200 guesses per game
+let amountOfGuesses = 200;
 let currentCountry = null;
 let points = 0;
 
@@ -58,7 +58,7 @@ const map = new Map({
 });
 
 const countries = await getCountryData();
-const randomCountryAmount = new randomCountries()
+const randomCountryAmount = new RandomCountries()
 randomCountryAmount.generateRandomCountryAmount(countries, amountOfGuesses);
 document.querySelector('.amount').textContent = amount;
 document.querySelector('.random-country-name').innerText = randomCountryAmount.getCurrentRandomCountry();
