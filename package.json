@@ -1,6 +1,7 @@
 {
   "name": "mapstuff",
   "main": "start.html",
+  "type": "module",
   "dependencies": {
     "ol": "10.4.0"
   },

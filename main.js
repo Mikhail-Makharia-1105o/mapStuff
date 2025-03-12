@@ -11,10 +11,73 @@ import Style from 'ol/style/Style.js';
 import Fill from 'ol/style/Fill.js'
 
 const urlParams = new URLSearchParams(window.location.search);
-let amount = urlParams.get('amount') && urlParams.get('amount') > 0 ? urlParams.get('amount') : 5;
-let amountOfGuesses = 200;
-let currentCountry = null;
-let points = 0;
+
+const createGameState = (initialAmount, amountOfGuesses) => ({
+  amount: initialAmount,
+  amountOfGuesses: amountOfGuesses,
+  points: 0
+});
+
+const checkAnswer = (gameState, selectedCountry, correctCountry) => {
+  if (compareCountries(selectedCountry, correctCountry)) {
+    gameState.points =+ 1;
+    return { correct: true, gameOver: gameState.points === gameState.amountOfGuesses };
+  } else {
+    gameState.amount -= 1;
+    return { correct: false, gameOver: gameState.amount === 0 };
+  }
+};
+
+const compareCountries = (country1, country2) => 
+  country1.trim().toLowerCase() === country2.trim().toLowerCase();
+
+const getCurrentScore = (gameState) => ({
+  points: gameState.points,
+  attemptsLeft: gameState.amount
+});
+
+const gameState = createGameState(amount, amountOfGuesses);
+
+map.on('click', (evt) => {
+  displayFeatureInfo(evt.pixel);
+  
+  if (!currentCountry) return;
+
+  const result = checkAnswer(
+    gameState,
+    currentCountry, 
+    randomCountryAmount.getCurrentRandomCountry()
+  );
+
+  updateUI(gameState);
+  
+  if (result.gameOver) {
+    handleGameOver(result.correct);
+    return;
+  }
+
+  if (result.correct) {
+    randomCountryAmount.nextCountry();
+    updateCountryName();
+  }
+});
+
+const updateUI = (gameState) => {
+  document.getElementById('info').textContent = currentCountry;
+  const score = getCurrentScore(gameState);
+  document.querySelector('.points').textContent = score.points;
+  document.querySelector('.amount').textContent = score.attemptsLeft;
+};
+
+const handleGameOver = (isWin) => {
+  alert(isWin ? 'Congratulations! You won!' : 'You lost!');
+  window.location.href = './index.html';
+};
+
+const updateCountryName = () => {
+  document.querySelector('.random-country-name').innerText = 
+    randomCountryAmount.getCurrentRandomCountry();
+};
 
 const countryColors = ['#FFC312', '#C4E538', '#12CBC4', '#ED4C67', '#EE5A24']
 
@@ -60,8 +123,7 @@ const map = new Map({
 const countries = await getCountryData();
 const randomCountryAmount = new RandomCountries()
 randomCountryAmount.generateRandomCountryAmount(countries, amountOfGuesses);
-document.querySelector('.amount').textContent = amount;
-document.querySelector('.random-country-name').innerText = randomCountryAmount.getCurrentRandomCountry();
+updateCountryName()
 
 const featureOverlay = new VectorLayer({
   source: new VectorSource(),
@@ -102,32 +164,7 @@ map.on('pointermove', function (evt) {
   displayFeatureInfo(evt.pixel);
 });
 
-map.on('click', function (evt) {
-  displayFeatureInfo(evt.pixel);
-  if (currentCountry) {
-    document.getElementById('info').textContent = currentCountry;
-    console.log(amount)
-    if (compare(currentCountry, randomCountryAmount.getCurrentRandomCountry())) {
-      points++;
-      document.querySelector('.points').textContent = points;
-      if(points === amountOfGuesses) {
-        alert('Congratulations! You won!');
-        window.location.href = './index.html'
-      }
-      randomCountryAmount.nextCountry();
-      document.querySelector('.random-country-name').innerText = randomCountryAmount.getCurrentRandomCountry();
-    } else {
-      amount -= 1;
-      if (amount === 0) {
-        alert('You lost!');
-        window.location.href = './index.html'
-      }
-      document.querySelector('.amount').textContent = amount;
-    }
-  }
-});
+// map.on('click', function (evt) {
+//   displayFeatureInfo(evt.pixel);
 
-function compare(country1, country2) {
-  console.log(country1, country2)
-  return country1.toLowerCase() === country2.toLowerCase()
-}
+// });
