@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <script type="module" src="main.js" defer></script>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Map Game</title>
-    <link rel="stylesheet" href="node_modules/ol/ol.css">
+    <link rel="stylesheet" href="node_modules/ol/ol.css" />
+    <script type="module" src="main.js" defer></script>
     <style>
       .map {
         width: 100%;
@@ -27,21 +27,21 @@
         padding: 0.3em;
       }
       #map:focus {
-        outline: #4A74A8 solid 0.15em;
+        outline: #4a74a8 solid 0.15em;
       }
     </style>
-    <link rel="stylesheet" href="main_style.css" type="text/css"/>
+    <link rel="stylesheet" href="main_style.css" type="text/css" />
   </head>
   <body>
     <a class="skiplink" href="#map">Go to map</a>
     <div id="map" class="map" tabindex="0"></div>
     <div class="random-country">
-        <h2 class="random-country-name"></h2>
+      <h2 class="random-country-name"></h2>
     </div>
-    <div id="info">&nbsp;</div>
-    <p>Points:</p>
-    <p class="points">0</p>
-    <p>Lives left:</p>
-    <p class="lives"></p>
+    <div id="info">Current country: <span id="random-country"></span></div>
+    <div id="lives">Current lives: <span id="lives-amount"></span></div>
+    <div id="score">Current score: <span id="score-amount">0</span></div>
+    <div id="streak">Current streak: <span id="streak-amount">0</span></div>
+  </body>
   </body>
 </html>

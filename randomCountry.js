@@ -1,31 +1,37 @@
 export default class RandomCountries {
-    constructor() {
-        this.countries = [];
-        this.current = 0;
-    }
+  constructor() {
+    this.countries = [];
+    this.current = 0;
+  }
 
-    generateRandomCountryAmount(countries, amount) {
-        const cont = [...countries]
-        if (amount > cont.length || amount <= 0) {
-            throw new Error("Invalid amount");
-        }
-        for (let i = 0; i < amount; i++) {
-            const randomCountry = cont[Math.floor(Math.random() * cont.length)];
-            this.countries.push(randomCountry.name.common);
-            cont.splice(randomIndex, 1);
-        }
+  generateRandomCountryList(countries, amount) {
+    console.log(countries);
+    console.log(JSON.stringify(countries));
+    const cont = [...countries];
+    if (amount > cont.length || amount <= 0) {
+      throw new Error("Invalid amount");
     }
-    
+    for (let i = 0; i < amount; i++) {
+      const randomCountry = cont[Math.floor(Math.random() * cont.length)];
+      this.countries.push(randomCountry.name.common);
+      cont.splice(randomIndex, 1);
+    }
+  }
 
-    nextCountry() {
-        if (this.current === this.countries.length) {
-            return -1;
-        }
-        this.current += 1;
-        return 0;
+  nextCountry() {
+    if (this.current === this.countries.length) {
+      return -1;
     }
+    this.current += 1;
+    return 0;
+  }
 
-    getCurrentRandomCountry() {
-        return this.countries[this.current];
-    }
+  getCurrentRandomCountry() {
+    return this.countries[this.current];
+  }
+
+  clearCountries() {
+    this.countries = [];
+    this.current = 0;
+  }
 }

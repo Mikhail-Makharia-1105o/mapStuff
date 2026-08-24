@@ -1,170 +1,122 @@
-import Map from 'ol/Map.js';
-import View from 'ol/View.js';
-import TileLayer from 'ol/layer/Tile.js';
-import VectorLayer from 'ol/layer/Vector.js';
-import VectorSource from 'ol/source/Vector.js';
-import OSM from 'ol/source/OSM.js';
-import getCountryData from './countries.js';
-import RandomCountries from './randomCountry.js';
-import GeoJSON from 'ol/format/GeoJSON.js';
-import Style from 'ol/style/Style.js';
-import Fill from 'ol/style/Fill.js'
+import MapHandler from "./map.js";
+import Countries from "./countries.js";
+import ScoreKeeper from "./scoreKeeper.js";
 
-const urlParams = new URLSearchParams(window.location.search);
+let livesAmount = localStorage.getItem("lives") || 5;
+document.getElementById("lives-amount").textContent = livesAmount;
+const score = new ScoreKeeper(localStorage.getItem("streakMultiplier") || 1.11);
+const countries = new Countries();
+await countries.storeCountryData();
+const mapHandler = new MapHandler();
+const map = mapHandler.getMap();
+mapHandler.initialize();
 
-const createGameState = (initialAmount, amountOfGuesses) => ({
-  amount: initialAmount,
-  amountOfGuesses: amountOfGuesses,
-  points: 0
-});
-
-const checkAnswer = (gameState, selectedCountry, correctCountry) => {
-  if (compareCountries(selectedCountry, correctCountry)) {
-    gameState.points =+ 1;
-    return { correct: true, gameOver: gameState.points === gameState.amountOfGuesses };
-  } else {
-    gameState.amount -= 1;
-    return { correct: false, gameOver: gameState.amount === 0 };
+async function gameMainLoop() {
+  if (livesAmount === 0) {
+    alert("Game over! You ran out of lives. Returning...");
+    window.location.href = "index.html";
+    return;
   }
-};
+  let countryToGuess;
 
-const compareCountries = (country1, country2) => 
-  country1.trim().toLowerCase() === country2.trim().toLowerCase();
-
-const getCurrentScore = (gameState) => ({
-  points: gameState.points,
-  attemptsLeft: gameState.amount
-});
-
-const gameState = createGameState(amount, amountOfGuesses);
-
-map.on('click', (evt) => {
-  displayFeatureInfo(evt.pixel);
-  
-  if (!currentCountry) return;
-
-  const result = checkAnswer(
-    gameState,
-    currentCountry, 
-    randomCountryAmount.getCurrentRandomCountry()
-  );
-
-  updateUI(gameState);
-  
-  if (result.gameOver) {
-    handleGameOver(result.correct);
+  try {
+    countryToGuess = await countries.getRandomCountry();
+  } catch (error) {
+    console.error("Error fetching random country:", error);
+    window.href.location = "index.html";
     return;
   }
 
-  if (result.correct) {
-    randomCountryAmount.nextCountry();
-    updateCountryName();
+  console.log("Random country fetched:", countryToGuess);
+  const randomCountryElement = document.getElementById("random-country");
+  if (randomCountryElement) {
+    randomCountryElement.textContent = countryToGuess;
+  } else {
+    console.error("Element with id 'random-country' not found.");
   }
-});
 
-const updateUI = (gameState) => {
-  document.getElementById('info').textContent = currentCountry;
-  const score = getCurrentScore(gameState);
-  document.querySelector('.points').textContent = score.points;
-  document.querySelector('.amount').textContent = score.attemptsLeft;
-};
+  mapHandler.hideCountryName;
 
-const handleGameOver = (isWin) => {
-  alert(isWin ? 'Congratulations! You won!' : 'You lost!');
-  window.location.href = './index.html';
-};
-
-const updateCountryName = () => {
-  document.querySelector('.random-country-name').innerText = 
-    randomCountryAmount.getCurrentRandomCountry();
-};
-
-const countryColors = ['#FFC312', '#C4E538', '#12CBC4', '#ED4C67', '#EE5A24']
-
-function getRandomColor() {
-  return countryColors[Math.floor(Math.random() * countryColors.length)];
-}
-
-const vectorLayer = new VectorLayer({
-  background: '#1a2b39',
-  source: new VectorSource({
-    url: 'https://openlayers.org/en/v4.6.5/examples/data/geojson/countries.geojson',
-    format: new GeoJSON(),
-  }),
-  style: function(feature) {
-    return new Style({
-      fill: new Fill({
-        color: feature.get('color')
-      })
-    });
-  }
-})
-
-vectorLayer.getSource().on('addfeature', function(event) {
-  var feature = event.feature;
-  var color = getRandomColor();
-  feature.set('color', color);
-});
-
-const map = new Map({
-  layers: [
-    new TileLayer({
-      source: new OSM(),
-    }),
-    vectorLayer
-  ],
-  target: 'map',
-  view: new View({
-    center: [0, 0],
-    zoom: 2,
-  }),
-});
-
-const countries = await getCountryData();
-const randomCountryAmount = new RandomCountries()
-randomCountryAmount.generateRandomCountryAmount(countries, amountOfGuesses);
-updateCountryName()
-
-const featureOverlay = new VectorLayer({
-  source: new VectorSource(),
-  map: map,
-  style: {
-    'stroke-color': 'rgba(255, 255, 255, 0.7)',
-    'stroke-width': 2,
-  },
-});
-
-let highlight;
-const displayFeatureInfo = function (pixel) {
-  vectorLayer.getFeatures(pixel).then(function (features) {
-    const feature = features.length ? features[0] : undefined;
-    const info = document.getElementById('info');
-    if (features.length) {
-      currentCountry = feature.values_.name
+  map.on("click", function (evt) {
+    if (
+      mapHandler.getFeatureAtPixel(evt.pixel)?.get("name") === countryToGuess
+    ) {
+      mapHandler.revealCountryNameAtPosition(
+        mapHandler.getFeatureAtPixel(evt.pixel),
+        evt.originalEvent.pageX,
+        evt.originalEvent.pageY,
+        true,
+      );
+      score.increaseStreak();
+      score.updateScore();
+      document.getElementById("score-amount").textContent = score.getScore();
+      document.getElementById("streak-amount").textContent = score.getStreak();
+      gameMainLoop();
     } else {
-      currentCountry = null;
-    }
-
-    if (feature !== highlight) {
-      if (highlight) {
-        featureOverlay.getSource().removeFeature(highlight);
+      mapHandler.revealCountryNameAtPosition(
+        mapHandler.getFeatureAtPixel(evt.pixel),
+        evt.originalEvent.pageX,
+        evt.originalEvent.pageY,
+      );
+      livesAmount--;
+      document.getElementById("lives-amount").textContent = livesAmount;
+      score.resetStreak();
+      document.getElementById("streak-amount").textContent = score.getStreak();
+      if (livesAmount === 0) {
+        alert("Game over! You ran out of lives.");
+        window.location.href = "index.html";
       }
-      if (feature) {
-        featureOverlay.getSource().addFeature(feature);
-      }
-      highlight = feature;
     }
   });
-};
+}
 
-map.on('pointermove', function (evt) {
-  if (evt.dragging) {
-    return;
-  }
-  displayFeatureInfo(evt.pixel);
-});
+// const map = mapHandler.getMap();
 
-// map.on('click', function (evt) {
-//   displayFeatureInfo(evt.pixel);
+// let countryToGuess = null;
 
+// countryToGuess = await getRandomCountry();
+
+// console.log("Random country fetched:", countryToGuess);
+// const randomCountryElement = document.getElementById("random-country");
+// if (randomCountryElement) {
+//   randomCountryElement.textContent = countryToGuess;
+// } else {
+//   console.error("Element with id 'random-country' not found.");
+// }
+
+// map.on("click", function (evt) {
+//   console.log(evt);
+//   console.log(
+//     "Map clicked at pixel:",
+//     evt.pixel,
+//     ", which happens to be country named: ",
+//     mapHandler.getFeatureAtPixel(evt.pixel)?.get("name") || "No country found",
+//     "and that means the user has:",
+//     mapHandler.getFeatureAtPixel(evt.pixel)?.get("name") === countryToGuess
+//       ? "guessed correctly"
+//       : "guessed incorrectly",
+//   );
+//   if (mapHandler.getFeatureAtPixel(evt.pixel)?.get("name") === countryToGuess) {
+//     alert("Correct! You guessed the country!");
+//     mapHandler.revealCountryNameAtPosition(
+//       mapHandler.getFeatureAtPixel(evt.pixel),
+//       evt.originalEvent.pageX,
+//       evt.originalEvent.pageY,
+//       true,
+//     );
+//   } else {
+//     mapHandler.revealCountryNameAtPosition(
+//       mapHandler.getFeatureAtPixel(evt.pixel),
+//       evt.originalEvent.pageX,
+//       evt.originalEvent.pageY,
+//     );
+//     livesAmount--;
+//     document.getElementById("lives-amount").textContent = livesAmount;
+//     if (livesAmount === 0) {
+//       alert("Game over! You ran out of lives.");
+//       window.location.href = "index.html";
+//     }
+//   }
 // });
+
+gameMainLoop();

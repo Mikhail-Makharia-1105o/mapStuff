@@ -1,22 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<link rel="stylesheet" href="start_style.css" type="text/css"/>
-<title>Map Game</title>
-</head>
-<body>
-<h1>Map Game</h1>
-<p>Test your map knowledge in this interactive highly configurable game or smth</p>
-<button type="button" id="start">Start new game</button>
-<label for="range">Amount of lives</label>
-<input type="text" value="5" maxlength="249" minlength="1" id="range">
-<script type="module">
-    let amountInput = 5;
-    document.querySelector('#start').addEventListener('click', (e) => {
+  <head>
+    <link rel="stylesheet" href="start_style.css" type="text/css" />
+    <title>Map Game</title>
+  </head>
+  <body>
+    <h1>Map Game</h1>
+
+    <button type="button" id="start">Start new game</button>
+    <div class="config">
+      <label for="lives">Amount of lives</label>
+      <input type="text" value="5" maxlength="249" minlength="1" id="lives" />
+
+      <label for="penalty">Penalty for skipping countries</label>
+      <input type="text" value="1" maxlength="249" minlength="1" id="penalty" />
+
+      <label for="time">Time limit</label>
+      <input type="text" value="60" maxlength="249" minlength="1" id="time" />
+
+      <label for="multiplier">Streak score multiplier</label>
+      <input
+        type="text"
+        value="1.11"
+        maxlength="249"
+        minlength="1"
+        id="multiplier"
+      />
+
+      <label for="multiplier">Streak time limit</label>
+      <input
+        type="text"
+        value="5"
+        maxlength="249"
+        minlength="1"
+        id="streakTime"
+      />
+    </div>
+    <script type="module">
+      document.querySelector("#start").addEventListener("click", (e) => {
         e.preventDefault();
-        amountInput = document.querySelector('#range').value;
-        setTimeout(() => window.location.href = `./game.html?amount=${amountInput}`, 1000);
-    })
-</script>
-</body>
+        const lifeAmount = document.querySelector("#lives").value || 5;
+        const penalty = document.querySelector("#penalty").value || 1;
+        const time = document.querySelector("#time").value || 60;
+        const multiplier = document.querySelector("#multiplier").value || 1.11;
+        const streakTime = document.querySelector("#streakTime").value || 5;
+
+        localStorage.setItem("penalty", penalty);
+        localStorage.setItem("time", time);
+        localStorage.setItem("multiplier", multiplier);
+        localStorage.setItem("streakTime", streakTime);
+        localStorage.setItem("lives", lifeAmount);
+        window.location.href = "game.html";
+      });
+    </script>
+  </body>
 </html>
