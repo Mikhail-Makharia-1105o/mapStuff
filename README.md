@@ -1,4 +1,4 @@
-https://mapstuff-nu.vercel.app/
+https://mikhail-makharia-1105o.github.io/mapStuff/
 
 Very simple game built with OpenLayers API and RestCountries API.
 Test your map knowledge by choosing the countries based on the name.
