@@ -101,21 +101,38 @@ export default class MapHandler {
     if (feature == null) {
       return -1;
     }
-    var box = document.createElement("div");
-    box.style.position = "absolute";
-    box.innerHTML = feature?.get("name");
-    box.style.backgroundColor = isCorrect ? "green" : "red";
-    box.style.color = "white";
-    box.style.padding = "5px";
-    box.style.borderRadius = "5px";
-    box.style.zIndex = "1000";
-    document.body.appendChild(box);
-    box.style.left = pageX + "px";
-    box.style.top = pageY + "px";
-    box.style.visibility = "visible";
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "country-tooltip";
+    tooltip.setAttribute("data-state", isCorrect ? "correct" : "incorrect");
+
+    const content = document.createElement("div");
+    content.className = "tooltip-content";
+    content.textContent = feature?.get("name");
+
+    const icon = document.createElement("div");
+    icon.className = "tooltip-icon";
+    icon.textContent = isCorrect ? "✓" : "✗";
+
+    tooltip.appendChild(icon);
+    tooltip.appendChild(content);
+
+    document.body.appendChild(tooltip);
+
+    tooltip.style.left = pageX + 15 + "px";
+    tooltip.style.top = pageY - 10 + "px";
+
+    requestAnimationFrame(() => {
+      tooltip.classList.add("show");
+    });
+
     setTimeout(() => {
-      document.body.removeChild(box);
-    }, 1000);
+      tooltip.classList.remove("show");
+      setTimeout(() => {
+        document.body.removeChild(tooltip);
+      }, 300);
+    }, 1800);
+
     return 0;
   }
 }

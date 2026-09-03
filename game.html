@@ -23,6 +23,14 @@
               >Loading...</span
             >
           </div>
+
+          <div class="timer-container">
+            <div class="timer-bar">
+              <div class="timer-fill" id="timer-fill"></div>
+            </div>
+            <span class="timer-text" id="timer-text">60s</span>
+          </div>
+
           <div class="stats-row">
             <div class="stat stat-compact">
               <span class="stat-label">Lives</span>
@@ -36,6 +44,7 @@
               <span class="stat-label">Streak</span>
               <span class="stat-value stat-streak" id="streak-amount">0</span>
             </div>
+            <button class="skip-btn" id="skip-btn">Skip</button>
           </div>
         </div>
 
@@ -45,13 +54,6 @@
         <div class="map-hint">
           <p>Click on the map to select the country</p>
         </div>
-      </div>
-
-      <div class="random-country" style="display: none">
-        <h2 class="random-country-name"></h2>
-      </div>
-      <div id="info" style="display: none">
-        Current country: <span id="random-country"></span>
       </div>
     </div>
   </body>
