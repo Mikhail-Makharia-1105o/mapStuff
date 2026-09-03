@@ -2,46 +2,57 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Map Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Map Game - Play</title>
     <link rel="stylesheet" href="node_modules/ol/ol.css" />
-    <script type="module" src="main.js" defer></script>
-    <style>
-      .map {
-        width: 100%;
-        height: 400px;
-      }
-      a.skiplink {
-        position: absolute;
-        clip: rect(1px, 1px, 1px, 1px);
-        padding: 0;
-        border: 0;
-        height: 1px;
-        width: 1px;
-        overflow: hidden;
-      }
-      a.skiplink:focus {
-        clip: auto;
-        height: auto;
-        width: auto;
-        background-color: #fff;
-        padding: 0.3em;
-      }
-      #map:focus {
-        outline: #4a74a8 solid 0.15em;
-      }
-    </style>
     <link rel="stylesheet" href="main_style.css" type="text/css" />
+    <script type="module" src="main.js" defer></script>
   </head>
   <body>
-    <a class="skiplink" href="#map">Go to map</a>
-    <div id="map" class="map" tabindex="0"></div>
-    <div class="random-country">
-      <h2 class="random-country-name"></h2>
+    <div class="game-container">
+      <header class="game-header">
+        <h1 class="game-title">World Map Challenge</h1>
+        <a href="index.html" class="back-link">Back to Menu</a>
+      </header>
+
+      <div class="game-content">
+        <div class="stats-panel">
+          <div class="stat">
+            <span class="stat-label">Find Country</span>
+            <span class="stat-value country-name" id="random-country"
+              >Loading...</span
+            >
+          </div>
+          <div class="stats-row">
+            <div class="stat stat-compact">
+              <span class="stat-label">Lives</span>
+              <span class="stat-value stat-lives" id="lives-amount">5</span>
+            </div>
+            <div class="stat stat-compact">
+              <span class="stat-label">Score</span>
+              <span class="stat-value stat-score" id="score-amount">0</span>
+            </div>
+            <div class="stat stat-compact">
+              <span class="stat-label">Streak</span>
+              <span class="stat-value stat-streak" id="streak-amount">0</span>
+            </div>
+          </div>
+        </div>
+
+        <a class="skiplink" href="#map">Go to map</a>
+        <div id="map" class="map" tabindex="0"></div>
+
+        <div class="map-hint">
+          <p>Click on the map to select the country</p>
+        </div>
+      </div>
+
+      <div class="random-country" style="display: none">
+        <h2 class="random-country-name"></h2>
+      </div>
+      <div id="info" style="display: none">
+        Current country: <span id="random-country"></span>
+      </div>
     </div>
-    <div id="info">Current country: <span id="random-country"></span></div>
-    <div id="lives">Current lives: <span id="lives-amount"></span></div>
-    <div id="score">Current score: <span id="score-amount">0</span></div>
-    <div id="streak">Current streak: <span id="streak-amount">0</span></div>
-  </body>
   </body>
 </html>
