@@ -9,7 +9,6 @@ import Style from "ol/style/Style.js";
 import Fill from "ol/style/Fill.js";
 import Stroke from "ol/style/Stroke.js";
 import Text from "ol/style/Text.js";
-import "ol/ol.css";
 
 export default class MapHandler {
   constructor() {
