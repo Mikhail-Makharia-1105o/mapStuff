@@ -3,8 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="main_style.css" type="text/css" />
-    <title>Map Game</title>
+    <script
+      async
+      src="https://ga.jspm.io/npm:es-module-shims@1.8.0/dist/es-module-shims.js"
+    ></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "ol/": "https://cdn.jsdelivr.net/npm/ol@9.0.0/",
+          "ol": "https://cdn.jsdelivr.net/npm/ol@9.0.0/index.js",
+          "rbush": "https://cdn.jsdelivr.net/npm/rbush@4.1.1/+esm",
+          "geotiff": "https://cdn.jsdelivr.net/npm/geotiff@2.1.3/+esm"
+        }
+      }
+    </script>
     <style>
       .ol-box {
         box-sizing: border-box;
@@ -52,16 +64,8 @@
         opacity: 0.7;
       }
     </style>
-    <script type="importmap">
-      {
-        "imports": {
-          "ol/": "https://unpkg.com/ol@latest/",
-          "ol": "https://unpkg.com/ol@latest/index.js",
-          "rbush": "https://unpkg.com/rbush@4.1.1/index.js",
-          "geotiff": "https://unpkg.com/geotiff@2.1.3/dist-node/geotiff.js"
-        }
-      }
-    </script>
+    <link rel="stylesheet" href="main_style.css" type="text/css" />
+    <title>Map Game</title>
   </head>
   <body>
     <div class="game-container">
