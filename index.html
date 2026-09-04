@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="start_style.css" type="text/css" />
     <title>Map Game</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "ol/": "https://cdn.jsdelivr.net/npm/ol@v9.1.0/",
+          "ol": "https://cdn.jsdelivr.net/npm/ol@v9.1.0/index.js"
+        }
+      }
+    </script>
   </head>
   <body>
     <div class="container">
@@ -31,7 +39,14 @@
           <div class="settings-grid">
             <div class="form-group">
               <label for="lives">Lives</label>
-              <input type="number" id="lives" value="5" min="1" max="20" />
+              <input
+                type="number"
+                id="lives"
+                value="5"
+                min="1"
+                max="20"
+                step="1"
+              />
               <span class="input-hint"
                 >How many wrong guesses you can make</span
               >
@@ -45,7 +60,7 @@
                 value="1"
                 min="1"
                 max="10"
-                step="0.1"
+                step="1"
               />
               <span class="input-hint">Points lost when skipping</span>
             </div>
