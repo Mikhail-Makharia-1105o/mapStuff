@@ -161,7 +161,7 @@ class Countries {
         },
       });
       const data = await response.json();
-      return data;
+      return data.data.objects;
     } catch (error) {
       console.error("Error fetching country data:", error);
     }
@@ -193,9 +193,9 @@ class Countries {
 
   async getFullFilteredCountryData() {
     const countryNames = await this.getFullCallCountryData();
-    const filteredCountryNames = Object.values(countryNames).map(
-      (country) => country.names.common,
-    );
+    const filteredCountryNames = Object.values(countryNames).map((country) => {
+      return country.names.common;
+    });
     const vectorCountryNames = await this.getVectorSourceCountryData();
     const filteredVectorCountryNames = Object.values(vectorCountryNames).map(
       (country) => {
