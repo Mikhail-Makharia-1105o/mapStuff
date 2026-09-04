@@ -308,6 +308,10 @@ async function initializeGame() {
     });
   }
 
+  document.querySelector("#debug-win").addEventListener("click", () => {
+    handleCorrectGuess();
+  });
+
   gameMainLoop();
 }
 

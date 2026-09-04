@@ -9,8 +9,19 @@
   <body>
     <div class="container">
       <header class="header">
-        <h1 class="title">Map Game</h1>
-        <p class="subtitle">Test your geography knowledge!</p>
+        <div class="header-top">
+          <h1 class="title">World Map Challenge</h1>
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-label="Toggle dark mode"
+          >
+            <span class="theme-icon">DARK</span>
+          </button>
+        </div>
+        <p class="subtitle">
+          Test your geography knowledge by locating countries on the map
+        </p>
       </header>
 
       <main class="main-content">
@@ -59,6 +70,14 @@
                 >Score boost for consecutive correct answers</span
               >
             </div>
+
+            <div class="form-group">
+              <label for="streakTime">Streak Window (seconds)</label>
+              <input type="number" id="streakTime" value="5" min="1" max="30" />
+              <span class="input-hint"
+                >Time to answer before streak resets</span
+              >
+            </div>
           </div>
         </div>
 
@@ -85,6 +104,30 @@
     </div>
 
     <script type="module">
+      const themeToggle = document.getElementById("theme-toggle");
+      const htmlElement = document.documentElement;
+      const savedTheme =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+
+      htmlElement.setAttribute("data-theme", savedTheme);
+      updateThemeIcon(savedTheme);
+
+      function updateThemeIcon(theme) {
+        themeToggle.querySelector(".theme-icon").textContent =
+          theme === "dark" ? "L" : "D";
+      }
+
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = htmlElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        htmlElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateThemeIcon(newTheme);
+      });
+
       const defaultSettings = {
         lives: 5,
         penalty: 1,

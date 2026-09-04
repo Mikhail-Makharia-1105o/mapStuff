@@ -6,9 +6,9 @@ export default class ScoreKeeper {
   }
 
   updateScore() {
-    this.score = Math.round(
-      this.score + 10 * (this.streak * this.streakMultiplier),
-    );
+    const currentMultiplier = this.streak + this.streakMultiplier;
+    console.log("current multiplier is " + currentMultiplier);
+    this.score = Math.round(this.score + 10 * currentMultiplier);
     console.log("current score is " + this.score);
     return this.score;
   }

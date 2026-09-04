@@ -6,12 +6,20 @@
     <title>Map Game - Play</title>
     <link rel="stylesheet" href="node_modules/ol/ol.css" />
     <link rel="stylesheet" href="main_style.css" type="text/css" />
-    <script type="module" src="main.js" defer></script>
   </head>
   <body>
     <div class="game-container">
       <header class="game-header">
-        <h1 class="game-title">World Map Challenge</h1>
+        <div class="header-content">
+          <h1 class="game-title">Map Game</h1>
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-label="Toggle dark mode"
+          >
+            <span class="theme-icon">D</span>
+          </button>
+        </div>
         <a href="index.html" class="back-link">Back to Menu</a>
       </header>
 
@@ -52,9 +60,45 @@
         <div id="map" class="map" tabindex="0"></div>
 
         <div class="map-hint">
-          <p>Click on the map to select the country</p>
+          <p>Debug:</p>
+          <button id="debug-win">WIN</button>
         </div>
       </div>
+
+      <div class="random-country" style="display: none">
+        <h2 class="random-country-name"></h2>
+      </div>
+      <div id="info" style="display: none">
+        Current country: <span id="random-country"></span>
+      </div>
     </div>
+
+    <script type="module">
+      const themeToggle = document.getElementById("theme-toggle");
+      const htmlElement = document.documentElement;
+
+      const savedTheme =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+
+      htmlElement.setAttribute("data-theme", savedTheme);
+      updateThemeIcon(savedTheme);
+
+      function updateThemeIcon(theme) {
+        themeToggle.querySelector(".theme-icon").textContent =
+          theme === "dark" ? "L" : "D";
+      }
+
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = htmlElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        htmlElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateThemeIcon(newTheme);
+      });
+    </script>
+    <script type="module" src="main.js"></script>
   </body>
 </html>
